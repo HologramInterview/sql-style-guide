@@ -596,8 +596,6 @@ Avoid subqueries; CTEs will make your queries easier to read and reason about.
 
 When using CTEs, pad the query with new lines.
 
-If you use any CTEs, always have a CTE named `final` and `select * from final` at the end. That way you can quickly inspect the output of other CTEs used in the query to debug the results.
-
 Closing CTE parentheses should use the same indentation level as `with` and the CTE names.
 
 ```sql
@@ -610,17 +608,11 @@ WITH ordered_details AS (
         row_number() over (PARTITION BY user_id ORDER BY date_updated DESC) AS details_rank
     FROM billingdaddy.billing_stored_details
 
-),
-
-final AS (
-
-    SELECT user_id, name
-    FROM ordered_details
-    WHERE details_rank = 1
-
 )
 
-SELECT * FROM final
+SELECT user_id, name
+FROM ordered_details
+WHERE details_rank = 1
 
 -- Bad
 SELECT user_id, name
